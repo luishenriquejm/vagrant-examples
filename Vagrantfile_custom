@@ -14,24 +14,26 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
 
   config.vm.box = "generic/ubuntu2204"
-  config.vm.box_version = "4.1.0"
-  config.vm.box_check_update = false
+  config.vm.box_version = "4.1.0"     # define a specific version for a box
+  config.vm.box_check_update = false  # disable verification of new box versions
 
-  config.vm.hostname = "srv01"
+  config.vm.hostname = "srv01"        # define virtual machine hostname
 
-  config.vm.network "public_network", ip: "192.168.1.210", bridge: "Realtek PCIe GbE Family Controller"
+  config.vm.network "public_network"  # simple way to up an eth device; the IP address will be defined by the dhcp server of the bridged network
+  config.vm.network "public_network", ip: "192.168.1.210", bridge: "Realtek PCIe GbE Family Controller" # public network in bridge mode.
+                                                            # If you don't specify the device to bridge, you will be asked to choose one during the machine import/creation phase
   config.vm.network "private_network", ip: "10.0.0.10", hostname: true # hostname: true adds ip + hostname to /etc/hosts
   
   # VMWare provider
   config.vm.provider "vmware_desktop" do |vw|
-    vw.vmx["memsize"] = "1024"
-    vw.vmx["numvcpus"] = "2"
+    vw.vmx["memsize"] = "1024"        # memory definition for vmware provider
+    vw.vmx["numvcpus"] = "2"          # cpu definition for vmware provider
   end
   # VirtualBox provider
   # config.vm.provider "virtualbox" do |vb|
-  #   vb.check_guest_additions = false # skip guest additions checking
-  #   vb.cpus = 1
-  #   vb.memory = "1024"
+  #   vb.check_guest_additions = false  # skip guest additions checking
+  #   vb.cpus = 1                       # cpu definition for vmware provider
+  #   vb.memory = "1024"                # memory definition for vmware provider
   # end
 
 end
