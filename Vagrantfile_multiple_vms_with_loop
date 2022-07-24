@@ -1,0 +1,48 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  # The most common configuration options are documented and commented below.
+  # For a complete reference, please see the online documentation at
+  # https://docs.vagrantup.com.
+
+  # Every Vagrant development environment requires a box. You can search for
+  # boxes at https://vagrantcloud.com/search.
+
+  (1..1).each do |i|
+    config.vm.define "master#{i}" do |master|
+      master.vm.box = "generic/ubuntu2204"
+      master.vm.box_version = "4.1.0"
+      master.vm.box_check_update = false
+
+      master.vm.hostname = "k8s-master#{i}"
+
+      master.vm.network "public_network", ip: "192.168.1.21#{i}", bridge: "Realtek PCIe GbE Family Controller"
+      master.vm.network "private_network", ip: "10.0.0.1#{i}", hostname: true
+      master.vm.provider "vmware_desktop" do |vw|
+        vw.memory = "4096"
+      end
+    end
+  end
+
+  (1..3).each do |i|
+    config.vm.define "workernode#{i}" do |workernode|
+      workernode.vm.box = "generic/ubuntu2204"
+      workernode.vm.box_version = "4.1.0"
+      workernode.vm.box_check_update = false
+
+      workernode.vm.hostname = "k8s-workernode#{i}"
+
+      workernode.vm.network "public_network", ip: "192.168.1.22#{i}", bridge: "Realtek PCIe GbE Family Controller"
+      workernode.vm.network "private_network", ip: "10.0.0.2#{i}"
+      workernode.vm.provider "vmware_desktop" do |vw|
+        vw.memory = "4096"
+      end
+    end
+  end
+
+end
